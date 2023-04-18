@@ -16,7 +16,7 @@ public class Transaction implements Serializable{
 		super();
 		this.amount = amount;
 		this.type = type;
-		this.txnID=UniqueCounter.nextValue();
+		this.txnID=UniqueCounter.getInstance().nextValue();
 	}
 
 	public double getAmount() {
@@ -28,7 +28,7 @@ public class Transaction implements Serializable{
 	}
 	
 	public String toString() {
-		return (this.txnID+":"+(type==this.CREDIT?"Deposit":"Withdrawal")+"\t: "+amount);
+		return (this.txnID+":"+(type==this.CREDIT?"Deposit":"Withdrawal")+": "+amount);
 		
 	}
 	
