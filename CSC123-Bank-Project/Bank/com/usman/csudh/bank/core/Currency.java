@@ -1,7 +1,8 @@
 package com.usman.csudh.bank.core;
+import java.io.Serializable;
+public class Currency implements Serializable {
 
-public class Currency {
-
+	private static final long serialVersionUID = 1L;
 	private String currencyCode;
 	private String currencyName;
 	private double exRate;

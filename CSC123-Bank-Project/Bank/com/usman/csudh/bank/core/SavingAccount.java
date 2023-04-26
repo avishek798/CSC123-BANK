@@ -1,5 +1,8 @@
 package com.usman.csudh.bank.core;
-public class SavingAccount extends Account{
+
+import java.io.Serializable;
+
+public class SavingAccount extends Account implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	public SavingAccount(Customer customer, Currency currency) {

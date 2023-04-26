@@ -1,7 +1,10 @@
 package com.usman.csudh.bank.core;
+import java.io.Serializable;
 
-public class AccountClosedException extends Exception {
+public class AccountClosedException extends Exception implements Serializable {
+	private static final long serialVersionUID = 1L;
 
+	
 	public AccountClosedException() {
 		// TODO Auto-generated constructor stub
 	}

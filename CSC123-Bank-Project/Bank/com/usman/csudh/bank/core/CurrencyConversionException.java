@@ -1,6 +1,7 @@
 package com.usman.csudh.bank.core;
+import java.io.Serializable;
 
-public class CurrencyConversionException extends Exception {
+public class CurrencyConversionException extends Exception implements Serializable {
 
 	public CurrencyConversionException(String message) {
 		super(message);

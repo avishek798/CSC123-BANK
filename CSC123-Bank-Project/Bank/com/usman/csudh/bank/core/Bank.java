@@ -5,8 +5,14 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
+
+import com.usman.csudh.util.UniqueCounter;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 
@@ -17,6 +23,24 @@ public class Bank {
 
 	static FileInputStream inStream = null;
 	static BufferedReader reader = null;
+
+	static File bankDataFile = new File("/Users/avishekbarua/CSC123-BANK/CSC123-Bank-Project/bankDataFile.dat");
+
+	static {
+		try {
+			if (!bankDataFile.exists())
+			bankDataFile.createNewFile();
+		} catch (IOException e) {
+
+		}
+	}
+
+	static FileOutputStream outStream = null;
+	static ObjectOutputStream outObject = null;
+
+	static FileInputStream inObjStream = null;
+
+	static ObjectInputStream dataObjectStream = null;
 
 	public static void readCurrencyFile() throws IOException {
 
@@ -40,6 +64,32 @@ public class Bank {
 			currencies.put(content[0].toUpperCase(), currency);
 
 		}
+	}
+
+	public static void writeBankData() throws IOException {
+
+		outStream = new FileOutputStream(bankDataFile);
+		outObject = new ObjectOutputStream(outStream);
+		outObject.writeObject(accounts);
+		outStream.flush();
+		outObject.flush();
+		outStream.close();
+		outObject.close();
+
+	}
+
+	public static void readBankData() throws IOException, ClassNotFoundException {
+
+		inObjStream = new FileInputStream(bankDataFile);
+
+
+		if ((inObjStream.available()) > 1) {
+			dataObjectStream = new ObjectInputStream(inObjStream);
+			accounts = (Map<Integer, Account>) dataObjectStream.readObject();
+			inObjStream.close();
+			dataObjectStream.close();
+		}
+
 	}
 
 	public static boolean fileloaded() {
@@ -87,7 +137,8 @@ public class Bank {
 		Customer c = new Customer(firstName, lastName, ssn);
 
 		if (!(currencies.containsKey(currencyCode.toUpperCase()))) {
-			throw new CurrencyConversionException("\nCurrency not availble. Re-enter another currency when opening a new account.\n");
+			throw new CurrencyConversionException(
+					"\nCurrency not availble. Re-enter another currency when opening a new account.\n");
 		}
 
 		Account a = new CheckingAccount(c, overdraftLimit, currencies.get(currencyCode.toUpperCase()));
@@ -97,12 +148,14 @@ public class Bank {
 
 	}
 
-	public static Account openSavingAccount (String firstName, String lastName, String ssn, String currencyCode) throws CurrencyConversionException {
-		
+	public static Account openSavingAccount(String firstName, String lastName, String ssn, String currencyCode)
+			throws CurrencyConversionException {
+
 		Customer c = new Customer(firstName, lastName, ssn);
 
 		if (!(currencies.containsKey(currencyCode.toUpperCase()))) {
-			throw new CurrencyConversionException("\nCurrency not availble. Re-enter another currency when opening a new account.\n");
+			throw new CurrencyConversionException(
+					"\nCurrency not availble. Re-enter another currency when opening a new account.\n");
 		}
 		Account a = new SavingAccount(c, currencies.get(currencyCode.toUpperCase()));
 		accounts.put(a.getAccountNumber(), a);
@@ -151,21 +204,22 @@ public class Bank {
 		out.write((byte) 10);
 		out.flush();
 	}
-	
-	public static void showAccInformation(int accountNumber, OutputStream out) throws NoSuchAccountException, IOException {
+
+	public static void showAccInformation(int accountNumber, OutputStream out)
+			throws NoSuchAccountException, IOException {
 		if (!accounts.containsKey(accountNumber)) {
 			throw new NoSuchAccountException("\nAccount number: " + accountNumber + " not found!\n\n");
 		}
-		
-		Account a=lookup(accountNumber);
-		out.write((byte)10);
-		out.write(("Account Number: "+ a.getAccountNumber()+"\n").getBytes());
-		out.write(("Name: "+ a.getAccountHolderName()+"\n").getBytes());
-		out.write(("SSN: "+ a.getAccountHolderSSN()+"\n").getBytes());
-		out.write(("Currency: "+ a.getCurrencyName()+"\n").getBytes());
-		out.write(("Currency Balance: "+a.getCurrencyName()+" "+a.getBalance()+"\n").getBytes());
-		out.write(("USD Balance: USD " +a.getCurrencyBalance()+"\n").getBytes());
-		
+
+		Account a = lookup(accountNumber);
+		out.write((byte) 10);
+		out.write(("Account Number: " + a.getAccountNumber() + "\n").getBytes());
+		out.write(("Name: " + a.getAccountHolderName() + "\n").getBytes());
+		out.write(("SSN: " + a.getAccountHolderSSN() + "\n").getBytes());
+		out.write(("Currency: " + a.getCurrencyName() + "\n").getBytes());
+		out.write(("Currency Balance: " + a.getCurrencyName() + " " + a.getBalance() + "\n").getBytes());
+		out.write(("USD Balance: USD " + a.getCurrencyBalance() + "\n").getBytes());
+
 	}
 
 	public static void printAccountTransactions(int accountNumber, OutputStream out)

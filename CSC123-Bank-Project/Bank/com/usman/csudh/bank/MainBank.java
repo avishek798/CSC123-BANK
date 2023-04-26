@@ -71,10 +71,12 @@ public class MainBank {
 
 			do {
 				try {
-					Bank.readCurrencyFile();
-				} catch (IOException e) {
+					Bank.readBankData();
+				} catch (ClassNotFoundException e) {
 					this.handleException(ui, e);
 				}
+				Bank.readCurrencyFile();
+
 				option = ui.getMainOption(); // Render main menu
 
 				switch (option) {
@@ -82,21 +84,6 @@ public class MainBank {
 
 					// Compact statement to accept user input, open account, and print the result
 					// including the account number
-
-					// ask question 1
-					// ask question 2
-
-					// input details of the account except currency
-
-//					while(true) {
-//						
-//							//Read token
-//							//open account
-//						
-//							break;							
-//							
-//						}
-//					}
 
 					try {
 						if (Bank.fileloaded()) {
@@ -205,7 +192,7 @@ public class MainBank {
 
 						ui.print(MSG_CURRENCY_CONVERSION,
 								Bank.currencyConversion(sellCurrency, buyCurrency, sellAmount));
-					} catch (IOException | CurrencyConversionException e) {
+					} catch (CurrencyConversionException e) {
 						this.handleException(ui, e);
 					}
 
@@ -223,6 +210,8 @@ public class MainBank {
 
 					}
 					break;
+				case 10:
+					Bank.writeBankData();
 
 				}
 
